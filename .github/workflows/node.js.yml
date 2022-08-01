@@ -25,19 +25,24 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
-    - name: SSH Remote Commands
-      uses: appleboy/ssh-action@v0.1.5
-      with:
-        key: ${{ secrets.SSH }}
-        host: ${{ secrets.HOSt }}
-        username: ${{ secrets.USER }}
-        script: |
-          pm2 delete all
-          cd /home/ubuntu
-          git pull
-          npm install
-          pm2 start -- start 
+    - name: npm install and build
+      run: |
+        npm install
+        npm run build
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH Remote Commands
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH }}
+          port: ${{ secrets.PORT }}
+          script: |
+            npm install -g pm2
+            cd ~/nodejs-deploymen-using-jenkins
+            git pull origin main
+            npm install
+            npm run build
