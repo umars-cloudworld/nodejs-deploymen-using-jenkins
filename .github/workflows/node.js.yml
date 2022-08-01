@@ -38,7 +38,7 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
-          key: ${{ secrets.KEY }}
+          key: ${{ secrets.SSH }}
           port: ${{ secrets.PORT }}
           script: |
             npm install -g pm2
