@@ -36,8 +36,6 @@ jobs:
         host: ${{ secrets.HOSt }}
         username: ${{ secrets.USER }}
         script: |
-          pm2 delete all
           cd /home/ubuntu
           git pull
           npm install
-          pm2 start -- start 
