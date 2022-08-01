@@ -29,23 +29,8 @@ jobs:
       run: |
         npm install
         npm run build
-  Deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    
-    steps:
-     - name: SSH Remote Commands
-       uses: appleboy/ssh-action@v0.1.5
-       with:
-        host: ${{ secrets.HOSTNAME }}
-        key: ${{ secrets.AWS_PRIVATE_KEY }}
-        username: ${{ secrets.USER }}
-        script: |
-          npm install -g pm2
-          cd ~/nodejs-deploymen-using-jenkins
-          git pull origin main
-          npm install
-          npm run lint
-          npm run prettier
-          npm run test
-          npm run buid
+        npm run lint
+        npm run prettier
+        npm run test
+        npm run buid
+          
