@@ -29,20 +29,25 @@ jobs:
       run: |
         npm install
         npm run build
-  deploy:
-    needs: [build]
+  Deploy:
+    needs: build
     runs-on: ubuntu-latest
+    
     steps:
-      - name: SSH Remote Commands
-        uses: appleboy/ssh-action@v0.1.5
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.SSH }}
-          port: ${{ secrets.PORT }}
-          script: |
-            npm install -g pm2
-            cd ~/nodejs-deploymen-using-jenkins
-            git pull origin main
-            npm install
-            npm run build
+      - uses: actions/checkout@v2 
+      - name: Deploy in EC2
+        env:
+            PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
+            HOSTNAME : ${{ secrets.HOSTNAME  }}
+            USER_NAME : ${{ secrets.USER_NAME  }}
+            
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+          
+          #Now we have got the access of EC2 and we will start the deploy .
+          npm install -g pm2
+          cd ~/nodejs-deploymen-using-jenkins
+          git pull origin main
+          npm install
+          npm run build
