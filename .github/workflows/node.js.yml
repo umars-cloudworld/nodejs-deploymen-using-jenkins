@@ -36,10 +36,10 @@ jobs:
       - name: SSH Remote Commands
         uses: appleboy/ssh-action@v0.1.5
         with:
-          key: ${{secrets.SSH}}
-          host: ${{secrets.HOST}}
-          username: ${{secrets.USER}}
-          port: ${{secrets.PORT}}
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH }}
+          port: ${{ secrets.PORT }}
           script: |
             npm install -g pm2
             cd ~/nodejs-deploymen-using-jenkins
